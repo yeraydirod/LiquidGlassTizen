@@ -1,5 +1,13 @@
 # Cambios
 
+## 0.3.0: Liquid Glass
+
+- **Nuevo aspecto Liquid Glass** inspirado en Apple TV: barra superior en dos cápsulas de cristal, iconos con esquinas redondeadas, borde de luz y brillo al enfocarlos, foco que eleva la app con una sombra profunda, entradas HDMI en tarjetas de cristal, ajustes en un gran panel esmerilado y opciones en píldoras.
+- **Ajuste "Glass effects"** con cuatro modos: Automático, Completo, Ligero y Apagado. Automático usa Ligero si el navegador de la tele no puede desenfocar. Si puede, mide los fps una sola vez con el efecto completo y lo mantiene solo si va a 45 fps o más.
+- **Fondo nuevo "Liquid"**, ahora el predeterminado.
+- **Fuente Inter** incluida en la app, para que funcione sin Internet.
+- **Modo Apagado idéntico al original:** las capturas salen iguales píxel a píxel a las de AeroTizen.
+
 ## 0.2.0: LiquidGlassTizen
 
 Primera versión con el nuevo nombre, a partir de AeroTizen 0.1.0 (proyecto idea).

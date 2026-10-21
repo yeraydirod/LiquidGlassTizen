@@ -32,7 +32,8 @@ LiquidGlass.config = {
 
   DEFAULTS: {
     home: [],
-    background: 'aurora',
+    background: 'liquid',
+    glass: 'auto',
     speed: 1,
     tempUnit: 'auto',
     dateFormat: 'weekday',

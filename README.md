@@ -2,7 +2,7 @@
 
 **Tu tele Samsung, sin anuncios y con la pantalla de inicio que se merece.**
 
-![Pantalla de inicio de LiquidGlassTizen](docs/screenshots/home.png)
+![Pantalla de inicio de LiquidGlassTizen con efecto cristal](docs/screenshots/glass-home.png)
 
 Enciendes la tele para ver una película y lo primero que te recibe es un escaparate: "Top Picks for You", Samsung TV Plus arrancando solo y una fila de apps que nunca pediste. Además, la tele va tomando nota de lo que ves.
 
@@ -17,6 +17,11 @@ No necesitas Tizen Studio, ni root, ni pelearte con un SDK de varios gigas.
 
 **En la tele**
 
+- 🫧 **Aspecto Liquid Glass**, al estilo de Apple TV: barras de cristal esmerilado flotando sobre el fondo, iconos con bordes redondeados y un brillo que los recorre, y el foco que *levanta* la app hacia ti en lugar de pintarle un borde. Tienes cuatro modos en Ajustes:
+  - **Automático:** la tele lo decide sola la primera vez que arranca. Si va fluida, usa Completo.
+  - **Completo:** desenfoque real del fondo detrás de cada panel.
+  - **Ligero:** el mismo diseño con un tinte más denso, para teles antiguas o lentas.
+  - **Apagado:** el aspecto plano original.
 - 🧩 Tus apps en una cuadrícula de 3 columnas, con sus logos de verdad.
 - 🔌 Las entradas HDMI debajo, con el nombre de lo que tienes enchufado. Puedes renombrarlas ("Xbox del salón", "La Play de Lucas").
 - ✋ Mantén OK sobre una app para moverla a donde quieras.
@@ -33,9 +38,9 @@ No necesitas Tizen Studio, ni root, ni pelearte con un SDK de varios gigas.
 - 📦 Firma e instala cualquier app `.wgt`, incluido el lanzador.
 - 🧹 Lista las apps instaladas, marca las que sobran y las quita si tu firmware lo permite.
 
-| Ajustes | Moviendo una app |
+| Ajustes de cristal | Entradas HDMI |
 |---|---|
-| ![Ajustes](docs/screenshots/settings.png) | ![Moviendo una app](docs/screenshots/move.png) |
+| ![Ajustes](docs/screenshots/glass-settings.png) | ![Entradas HDMI con el foco](docs/screenshots/glass-inputs.png) |
 
 Los nombres de dispositivos y el tiempo de las capturas son de ejemplo.
 
@@ -117,8 +122,9 @@ AeroTizen a su vez se apoyó en:
 - [Apps2Samsung](https://github.com/Apps2Samsung/Apps2Samsung) y [tizen-sdb](https://github.com/PatrickSt1991/tizen-sdb), para la conexión de desarrollador, los certificados y la firma.
 - [samsung-tizen-tv-debloat](https://github.com/ardazeytin/samsung-tizen-tv-debloat), para saber qué paquetes se pueden quitar sin romper nada.
 - Logos de [Simple Icons](https://simpleicons.org) (las marcas son de sus dueños).
+- Fuente [Inter](https://rsms.me/inter/), con licencia SIL Open Font License (incluida en `launcher/fonts/`).
 
-Este proyecto no tiene relación con Samsung ni con Apple. Úsalo bajo tu responsabilidad.
+El aspecto está inspirado en el estilo de Apple TV, pero está hecho desde cero con CSS propio, sin fuentes, iconos ni código de Apple. Este proyecto no tiene relación con Samsung ni con Apple. Úsalo bajo tu responsabilidad.
 
 ## Licencia
 
