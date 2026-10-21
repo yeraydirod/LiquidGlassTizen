@@ -5,8 +5,12 @@
   var cfg = A.config, tz = A.tizen;
   var apps = A.apps = { all: [], realIds: [] };
 
+  function isTvApp(a) {
+    return !!a.name && cfg.TV_APP_NAMES.test(a.name) && !cfg.NOT_TV_APP_NAMES.test(a.name);
+  }
+
   function isRealApp(a) {
-    return a.show !== false && (cfg.STORE_PACKAGE.test(a.packageId || '') || Object.prototype.hasOwnProperty.call(cfg.PRELOADED_APPS, a.id));
+    return isTvApp(a) || a.show !== false && (cfg.STORE_PACKAGE.test(a.packageId || '') || Object.prototype.hasOwnProperty.call(cfg.PRELOADED_APPS, a.id));
   }
 
   apps.load = function (done) {
