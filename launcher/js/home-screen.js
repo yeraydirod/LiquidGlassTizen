@@ -139,4 +139,4 @@
   }
 
   A.homeScreen = { render: render, buildRows: buildRows, focus: focus, keydown: keydown, keyup: keyup };
-})(window.AeroTizen);
+})(window.LiquidGlass);

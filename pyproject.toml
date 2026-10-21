@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "aerotizen"
+name = "lgtizen"
 dynamic = ["version"]
 description = "Debloat a Samsung Tizen TV, block ads, and install a clean, fast home screen, from your computer."
 readme = "README.md"
@@ -25,17 +25,17 @@ classifiers = [
 dev = ["pytest>=8", "ruff>=0.6", "lxml>=5"]
 
 [project.scripts]
-aerotizen = "aerotizen.cli:main"
-aerotizen-inspect = "aerotizen.inspect_app:main"
+lgtizen = "lgtizen.cli:main"
+lgtizen-inspect = "lgtizen.inspect_app:main"
 
 [tool.setuptools.dynamic]
-version = { attr = "aerotizen.__version__" }
+version = { attr = "lgtizen.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-aerotizen = ["ca/*"]
+lgtizen = ["ca/*"]
 
 [tool.ruff]
 line-length = 110

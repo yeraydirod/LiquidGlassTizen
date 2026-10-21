@@ -1,14 +1,14 @@
-"""aerotizen: clean up a Samsung Tizen TV from your computer.
+"""lgtizen: clean up a Samsung Tizen TV from your computer.
 
-  aerotizen discover            find TVs on your network
-  aerotizen status              model, Developer Mode, sdb capabilities
-  aerotizen apps                list installed packages, classified
-  aerotizen debloat             pick packages to remove, then remove them
-  aerotizen debloat --remove PKGID[,PKGID...] [--yes]
-  aerotizen certs               sign in to Samsung, create signing certs for this TV
-  aerotizen install PATH        sign + install an app folder or .wgt (e.g. launcher)
-  aerotizen key KEY_VOLUP [n]   press a remote button
-  aerotizen launch APPID        open an app
+  lgtizen discover            find TVs on your network
+  lgtizen status              model, Developer Mode, sdb capabilities
+  lgtizen apps                list installed packages, classified
+  lgtizen debloat             pick packages to remove, then remove them
+  lgtizen debloat --remove PKGID[,PKGID...] [--yes]
+  lgtizen certs               sign in to Samsung, create signing certs for this TV
+  lgtizen install PATH        sign + install an app folder or .wgt (e.g. launcher)
+  lgtizen key KEY_VOLUP [n]   press a remote button
+  lgtizen launch APPID        open an app
 
 Add --tv IP to target a specific TV (otherwise the first one found is used).
 """
@@ -20,8 +20,8 @@ import os
 import sys
 from collections import OrderedDict
 
-from aerotizen import catalog, discover, remote
-from aerotizen.sdb import Sdb, SdbError
+from lgtizen import catalog, discover, remote
+from lgtizen.sdb import Sdb, SdbError
 
 STATE_DIR = remote.CONFIG_DIR
 
@@ -172,7 +172,7 @@ def cert_dir_for(duid):
 
 
 def cmd_certs(args):
-    from aerotizen import certs
+    from lgtizen import certs
 
     host = pick_tv(args)
     with require_sdb(host) as s:
@@ -203,14 +203,14 @@ def app_id_of(src):
 
 
 def cmd_install(args):
-    from aerotizen import signer
+    from lgtizen import signer
 
     host = pick_tv(args)
     s = require_sdb(host)
     duid, tool_path = s.duid(), s.capability().get("sdk_toolpath", "/home/owner/share/tmp/sdk_tools")
     cdir = cert_dir_for(duid)
     if not os.path.exists(os.path.join(cdir, "distributor.p12")):
-        sys.exit(f"No certificates for this TV yet. Run: aerotizen --tv {host} certs")
+        sys.exit(f"No certificates for this TV yet. Run: lgtizen --tv {host} certs")
     app_id = app_id_of(args.src)
     signed = os.path.join(STATE_DIR, f"{app_id.split('.')[0]}-signed.wgt")
     signer.sign_wgt(args.src, signed, cdir)
@@ -238,7 +238,7 @@ def cmd_launch(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="aerotizen", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        prog="lgtizen", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--tv", help="TV IP address")
     sub = parser.add_subparsers(dest="cmd", required=True)

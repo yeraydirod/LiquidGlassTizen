@@ -53,4 +53,4 @@
     A.homewatch.start();
     setTimeout(function () { A.homewatch.reportApps(A.apps.realIds); }, 1500);
   });
-})(window.AeroTizen);
+})(window.LiquidGlass);

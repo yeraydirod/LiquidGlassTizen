@@ -80,4 +80,4 @@
   if (tz && tz.systeminfo) {
     try { tz.systeminfo.addPropertyValueChangeListener('VIDEOSOURCE', inputs.load); } catch (e) { /* not supported */ }
   }
-})(window.AeroTizen);
+})(window.LiquidGlass);

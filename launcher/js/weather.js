@@ -4,7 +4,7 @@
 window.Weather = (function () {
   'use strict';
 
-  var CACHE = 'aerotizen.weather.v1';
+  var CACHE = 'lgtizen.weather.v1';
   var REFRESH = 20 * 60 * 1000;
 
   // WMO weather codes -> simple icon shapes.

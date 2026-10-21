@@ -13,12 +13,12 @@
 //     leave it alone and treat it like an app the launcher opened.
 // Samsung's stock YouTube (Cobalt) always reports visible=false, so Home inside it can't be
 // detected; Back still returns to the launcher.
-// The launcher talks to this service over http://127.0.0.1:47790.
+// The launcher talks to this service over http://127.0.0.1:47791.
 
 var http = require('http');
 
-var SELF = 'DclHome001.Home';
-var PORT = 47790;
+var SELF = 'LqGlass001.Home';
+var PORT = 47791;
 var state = {
   watched: null, seen: false, leaving: false,
   apps: [], running: {}, selfVisible: null, hiddenSince: 0, watchAt: 0, lastLaunch: 0, last: null

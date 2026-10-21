@@ -1,4 +1,4 @@
-from aerotizen.sdb import Sdb, SdbError
+from lgtizen.sdb import Sdb, SdbError
 
 
 def test_handshake_reads_banner(fake_tv):

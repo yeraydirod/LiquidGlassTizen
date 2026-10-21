@@ -129,7 +129,7 @@ def create_profile(duid, out_dir, auth=None):
     password = secrets.token_urlsafe(18)
     key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
 
-    author_csr = _csr(key, x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "aerotizen")]))
+    author_csr = _csr(key, x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "lgtizen")]))
     dist_csr = _csr(
         key,
         x509.Name(

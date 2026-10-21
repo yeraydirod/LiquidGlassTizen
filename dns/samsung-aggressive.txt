@@ -1,4 +1,4 @@
-# AeroTizen: "aggressive" tier. Add on top of samsung-ads.txt only if you accept breakage.
+# LiquidGlassTizen: "aggressive" tier. Add on top of samsung-ads.txt only if you accept breakage.
 # Known side effects: firmware updates stop, some app downloads fail, Samsung account
 # and SmartThings features may break. Unblock a line if something you use stops working.
 

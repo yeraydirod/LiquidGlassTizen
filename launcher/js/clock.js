@@ -43,4 +43,4 @@
     tick: tick,
     start: function () { tick(); setInterval(tick, 10000); }
   };
-})(window.AeroTizen);
+})(window.LiquidGlass);

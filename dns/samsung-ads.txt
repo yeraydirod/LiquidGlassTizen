@@ -1,4 +1,4 @@
-# AeroTizen: Samsung TV ads + viewing-data (ACR) blocklist, "safe" tier.
+# LiquidGlassTizen: Samsung TV ads + viewing-data (ACR) blocklist, "safe" tier.
 # Blocks home-screen ads and automatic content recognition. The app store, app
 # logins, firmware updates and casting keep working.
 # Format: one domain per line (Pi-hole, AdGuard Home, NextDNS, pfBlockerNG, hosts-style tools).

@@ -1,12 +1,12 @@
-// AeroTizen launcher: every constant in one place.
-window.AeroTizen = window.AeroTizen || {};
+// LiquidGlassTizen launcher: every constant in one place.
+window.LiquidGlass = window.LiquidGlass || {};
 
-AeroTizen.config = {
-  APP_ID: 'DclHome001.Home',
-  SERVICE_ID: 'DclHome001.Watcher',
-  SERVICE_URL: 'http://127.0.0.1:47790',
+LiquidGlass.config = {
+  APP_ID: 'LqGlass001.Home',
+  SERVICE_ID: 'LqGlass001.Watcher',
+  SERVICE_URL: 'http://127.0.0.1:47791',
 
-  STORAGE_KEY: 'aerotizen.settings.v1',
+  STORAGE_KEY: 'lgtizen.settings.v1',
   LEGACY_STORAGE_KEYS: ['hearth.home.v1', 'declutter.home.v5'],
 
   // Remote control key codes (Tizen TV).
@@ -20,7 +20,7 @@ AeroTizen.config = {
   // everything else is firmware plumbing.
   STORE_PACKAGE: /^[A-Za-z0-9]{10}$/,
   PRELOADED_APPS: { 'org.tizen.netflix-app': '3201907018807', 'org.tizen.primevideo': '3201910019365' },
-  HIDDEN_APPS: /service|emanual|companion|dummy|widget|DclHome001/i,
+  HIDDEN_APPS: /service|emanual|companion|dummy|widget|LqGlass001|DclHome001/i,
   STORE_APP_IDS: ['org.volt.apps', 'com.samsung.tv.store'],
 
   FIREPLACE_ID: '__fire',

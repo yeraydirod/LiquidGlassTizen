@@ -19,7 +19,7 @@ module.exports = [
       ecmaVersion: 5,
       sourceType: 'script',
       globals: {
-        ...globals.browser, AeroTizen: 'writable', tizen: 'readonly', webapis: 'readonly',
+        ...globals.browser, LiquidGlass: 'writable', tizen: 'readonly', webapis: 'readonly',
         Uint8Array: 'readonly', Uint8ClampedArray: 'readonly'
       }
     },

@@ -16,7 +16,7 @@
       return done();
     }
     tz.application.getAppsInfo(function (list) {
-      apps.realIds = list.filter(function (a) { return isRealApp(a) && !/service|DclHome001/i.test(a.id); })
+      apps.realIds = list.filter(function (a) { return isRealApp(a) && !/service|LqGlass001|DclHome001/i.test(a.id); })
         .map(function (a) { return cfg.PRELOADED_APPS[a.id] || a.id; });
       apps.all = list.filter(function (a) { return isRealApp(a) && a.name && !cfg.HIDDEN_APPS.test(a.id) && !cfg.HIDDEN_APPS.test(a.name); })
         .map(function (a) { return { id: a.id, name: a.name, icon: a.iconPath || '' }; })
@@ -72,4 +72,4 @@
       window.Fireplace.open();
     }
   };
-})(window.AeroTizen);
+})(window.LiquidGlass);

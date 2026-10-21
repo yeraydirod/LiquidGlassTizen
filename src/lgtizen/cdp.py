@@ -1,7 +1,7 @@
 """Tiny Chrome DevTools Protocol client for a TV app exposed by inspect_app.
 
-python3 -m aerotizen.cdp eval "document.title"
-python3 -m aerotizen.cdp shot out.png
+python3 -m lgtizen.cdp eval "document.title"
+python3 -m lgtizen.cdp shot out.png
 """
 
 import base64

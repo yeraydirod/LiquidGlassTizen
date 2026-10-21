@@ -40,4 +40,4 @@
   };
 
   document.addEventListener('visibilitychange', function () { if (!document.hidden) { tell('/home'); } });
-})(window.AeroTizen);
+})(window.LiquidGlass);

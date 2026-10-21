@@ -47,4 +47,4 @@
       setInterval(refresh, 60000);  // Wi-Fi signal drifts without a change event
     }
   };
-})(window.AeroTizen);
+})(window.LiquidGlass);

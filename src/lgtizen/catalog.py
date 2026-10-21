@@ -15,7 +15,7 @@ PROTECTED_PKGS = {
     "ZODRT12q2l",  # WebAccountExtension (account plumbing)
     "aQjWjLsPaO",  # MultiScreenWebLauncher
     "30IKH0OX8U",  # Aria video background services
-    "DclHome001",  # this project's own launcher
+    "LqGlass001",  # this project's own launcher
 }
 PROTECTED_NAME_HINTS = ("lowmem", "webaccount", "multiscreen", "adplayer", "launcher")
 

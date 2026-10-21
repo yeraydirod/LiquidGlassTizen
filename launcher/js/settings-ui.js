@@ -190,4 +190,4 @@
   }
 
   A.settingsUi = { open: openSheet, close: close, isOpen: function () { return open; }, focus: focus, keydown: keydown };
-})(window.AeroTizen);
+})(window.LiquidGlass);

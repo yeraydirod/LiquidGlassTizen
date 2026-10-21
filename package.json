@@ -1,7 +1,7 @@
 {
-  "name": "aerotizen-launcher",
+  "name": "lgtizen-launcher",
   "private": true,
-  "description": "Dev tooling for the AeroTizen launcher (the launcher itself has no dependencies).",
+  "description": "Dev tooling for the LiquidGlassTizen launcher (the launcher itself has no dependencies).",
   "scripts": {
     "lint": "eslint launcher"
   },

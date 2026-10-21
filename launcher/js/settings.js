@@ -26,4 +26,4 @@
     Object.keys(cfg.DEFAULTS).forEach(function (k) { out[k] = settings[k]; });
     try { localStorage.setItem(cfg.STORAGE_KEY, JSON.stringify(out)); } catch (e) { /* storage full or blocked */ }
   };
-})(window.AeroTizen);
+})(window.LiquidGlass);

@@ -6,7 +6,7 @@ import threading
 
 import pytest
 
-from aerotizen import sdb
+from lgtizen import sdb
 
 
 def _frame(cmd, arg0, arg1, payload=b""):

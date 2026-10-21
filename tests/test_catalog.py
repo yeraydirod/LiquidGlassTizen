@@ -1,4 +1,4 @@
-from aerotizen import catalog
+from lgtizen import catalog
 
 
 def _block(app_id, title, tizen_id, package, removable=1):
@@ -44,7 +44,7 @@ def test_non_removable_and_infrastructure_are_protected():
     assert catalog.classify(locked) == "protected"
     infra = {"appid": "ZODRT12q2l.WebAccountExtension", "pkgid": "ZODRT12q2l", "name": "WebAccount"}
     assert catalog.classify(infra) == "protected"
-    own = {"appid": "DclHome001.Home", "pkgid": "DclHome001", "name": "AeroTizen", "removable": True}
+    own = {"appid": "LqGlass001.Home", "pkgid": "LqGlass001", "name": "LiquidGlassTizen", "removable": True}
     assert catalog.classify(own) == "protected"
 
 

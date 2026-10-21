@@ -87,4 +87,4 @@
   }
 
   A.tiles = { ICONS: ICONS, banner: banner, card: card, shortName: shortName };
-})(window.AeroTizen);
+})(window.LiquidGlass);
