@@ -1,6 +1,6 @@
 # LiquidGlassTizen
 
-**Tu tele Samsung, sin anuncios y con la pantalla de inicio que se merece.**
+**Tu tele Samsung, sin anuncios y con la pantalla de inicio Liquid Glass.**
 
 ![Pantalla de inicio de LiquidGlassTizen](docs/screenshots/home.png)
 
