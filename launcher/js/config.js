@@ -20,10 +20,6 @@ LiquidGlass.config = {
   // everything else is firmware plumbing.
   STORE_PACKAGE: /^[A-Za-z0-9]{10}$/,
   PRELOADED_APPS: { 'org.tizen.netflix-app': '3201907018807', 'org.tizen.primevideo': '3201910019365' },
-  // Firmware apps worth a tile anyway, matched by name: the TV's own antenna/live TV viewer.
-  // Samsung TV Plus is left out on purpose; it is a separate streaming app.
-  TV_APP_NAMES: /terrestre|televisi[oó]n en directo|live tv|^tv$|antena|antenna|tdt/i,
-  NOT_TV_APP_NAMES: /tv\s*plus/i,
   HIDDEN_APPS: /service|emanual|companion|dummy|widget|LqGlass001|DclHome001/i,
   STORE_APP_IDS: ['org.volt.apps', 'com.samsung.tv.store'],
 
