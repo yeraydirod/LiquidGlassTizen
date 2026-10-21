@@ -113,25 +113,44 @@ function tick() {
   });
 }
 
+// App ids as Tizen and the TV's local API spell them: "org.tizen.netflix-app", "3201907018807",
+// "abcdefghij.App". Anything else sent to the service is ignored.
+var APP_ID = /^[\w.-]{1,128}$/;
+var MAX_APPS = 1000;
+
+function cleanId(id) { return typeof id === 'string' && APP_ID.test(id) ? id : null; }
+
+function handle(pathname, q) {
+  if (pathname === '/watch') {
+    state.watched = cleanId(q.id); state.seen = false; state.leaving = false; state.watchAt = Date.now();
+  } else if (pathname === '/apps') {
+    state.apps = String(q.ids || '').split(',').filter(cleanId).slice(0, MAX_APPS);
+  } else if (pathname === '/leave') {
+    state.leaving = true; state.watched = null;
+  } else if (pathname === '/home') {
+    state.leaving = false; state.watched = null;
+  }
+}
+
 module.exports.onStart = function () {
-  http.createServer(function (req, res) {
-    var url = require('url').parse(req.url, true), q = url.query;
-    if (url.pathname === '/watch') {
-      state.watched = q.id || null; state.seen = false; state.leaving = false; state.watchAt = Date.now();
-    } else if (url.pathname === '/apps') {
-      state.apps = (q.ids || '').split(',').filter(Boolean);
-    } else if (url.pathname === '/leave') {
-      state.leaving = true; state.watched = null;
-    } else if (url.pathname === '/home') {
-      state.leaving = false; state.watched = null;
-    }
-    res.writeHead(200, { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(state));
-  }).listen(PORT, '127.0.0.1');
+  var server = http.createServer(function (req, res) {
+    var url = require('url').parse(req.url, true);
+    if (req.method === 'GET') { handle(url.pathname, url.query); }
+    // The launcher only needs the request to succeed. The internal state (installed and running
+    // apps) is not echoed back, so other apps on the TV can't read it through this port.
+    res.writeHead(req.method === 'GET' ? 200 : 405, { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' });
+    res.end('{"ok":true}');
+  });
+  server.listen(PORT, '127.0.0.1');
   setInterval(tick, 300);
   // Started at boot (on-boot="true"): open the launcher so the TV comes up on it.
   setTimeout(function () { launchSelf('boot'); }, 3000);
+  return server;
 };
+
+// For tests only.
+module.exports._state = state;
+module.exports._handle = handle;
 
 module.exports.onRequest = function () {};
 module.exports.onExit = function () {};

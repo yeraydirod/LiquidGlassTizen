@@ -9,6 +9,7 @@ Retail TVs only accept a handful of shell verbs ("0 vd_applist",
 only from the Host PC IP set in the TV's Developer Mode dialog.
 """
 
+import re
 import socket
 import struct
 import time
@@ -25,6 +26,17 @@ NAMES = {CNXN: "CNXN", AUTH: "AUTH", OPEN: "OPEN", OKAY: "OKAY", WRTE: "WRTE", C
 
 class SdbError(Exception):
     pass
+
+
+# Ids end up inside a shell command on the TV, so only plain ids get through.
+APP_ID = re.compile(r"^[A-Za-z0-9]{10}\.[A-Za-z0-9_\-]{1,64}$")
+ANY_APP_ID = re.compile(r"^[A-Za-z0-9][\w.\-]{0,127}$")  # also org.tizen.* style ids
+
+
+def require_id(value, pattern, what):
+    if not isinstance(value, str) or not pattern.match(value):
+        raise SdbError(f"refusing unexpected {what}: {value!r}")
+    return value
 
 
 class Sdb:
@@ -327,10 +339,9 @@ class Sdb:
     def debug_launch(self, app_id):
         """Launch an app with the web inspector enabled; returns the inspector port."""
         # The TV keeps this stream open, so read until the port appears rather than to EOF.
-        import re
-
         lid = self._next_id
         self._next_id += 1
+        require_id(app_id, ANY_APP_ID, "app id")
         self._send(OPEN, lid, 0, f"shell:0 debug {app_id}\0".encode())
         out = b""
         while True:
@@ -347,6 +358,7 @@ class Sdb:
                 raise SdbError(f"debug launch failed: {out.decode(errors='replace').strip()[-200:]}")
 
     def install(self, app_id, wgt_bytes, tool_path):
+        require_id(app_id, APP_ID, "app id")
         remote = f"{tool_path}/{app_id.split('.')[0]}.wgt"
         self.push(wgt_bytes, remote)
         return self.shell(f"0 vd_appinstall {app_id} {remote}")
@@ -366,9 +378,11 @@ class Sdb:
         return self.shell("0 vd_applist")
 
     def uninstall(self, pkgid):
+        require_id(pkgid, ANY_APP_ID, "package id")
         return self.shell(f"0 vd_appuninstall {pkgid}")
 
     def launch(self, appid):
+        require_id(appid, ANY_APP_ID, "app id")
         return self.shell(f"0 was_execute {appid}")
 
     def duid(self):

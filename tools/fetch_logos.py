@@ -28,6 +28,7 @@ SLUGS = {
     "primevideo": "13.0.0",
     "hulu": "9.0.0",
 }
+SVG_PATH = re.compile(r"^[MmZzLlHhVvCcSsQqTtAaEe0-9.,+\-\s]+$")
 OUT = os.path.join(os.path.dirname(__file__), "..", "launcher", "js", "logos.js")
 
 
@@ -37,6 +38,9 @@ def main():
         url = f"https://cdn.jsdelivr.net/npm/simple-icons@{ver}/icons/{slug}.svg"
         svg = urllib.request.urlopen(url, timeout=20).read().decode()
         path = re.search(r'<path d="([^"]+)"', svg).group(1)
+        # The path is inserted into the page as markup, so accept SVG path data only.
+        if not SVG_PATH.match(path):
+            raise SystemExit(f"{slug}: unexpected characters in the icon path, refusing to write it")
         logos[slug] = path
         print(f"{slug:<14} {ver}")
     with open(OUT, "w") as f:

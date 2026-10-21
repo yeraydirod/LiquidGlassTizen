@@ -21,7 +21,7 @@ import sys
 from collections import OrderedDict
 
 from lgtizen import catalog, discover, remote
-from lgtizen.sdb import Sdb, SdbError
+from lgtizen.sdb import APP_ID, Sdb, SdbError
 
 STATE_DIR = remote.CONFIG_DIR
 
@@ -181,7 +181,7 @@ def cmd_certs(args):
     if os.path.exists(os.path.join(out, "distributor.p12")) and not args.force:
         print(f"Certificates for {duid} already exist in {out} (use --force to recreate).")
         return
-    certs.create_profile(duid, out)
+    certs.create_profile(duid, out, fixed_state=args.fixed_state)
     print(f"Certificates for TV {duid} saved to {out}")
 
 
@@ -199,6 +199,10 @@ def app_id_of(src):
     m = re.search(r"<tizen:application[^>]*\bid=\"([^\"]+)\"", xml)
     if not m:
         sys.exit("config.xml has no <tizen:application id=...>")
+    if not APP_ID.match(m.group(1)):
+        sys.exit(
+            f"config.xml has an unusual app id {m.group(1)!r}; expected PACKAGEID.Name."
+        )
     return m.group(1)
 
 
@@ -219,11 +223,18 @@ def cmd_install(args):
     with open(signed, "rb") as f:
         out = s.install(app_id, f.read(), tool_path)
     print(out.strip())
-    installed = app_id.split(".")[0] in s.applist()
+    apps = s.applist()
+    installed = app_id.split(".")[0] in apps
     s.close()
     print(f"\n{'Installed' if installed else 'NOT installed'}: {app_id}")
     if not installed:
         sys.exit(1)
+    if app_id.startswith("LqGlass001.") and "DclHome001" in apps:
+        # Both launchers start at boot and would keep taking the screen from each other.
+        print(
+            "\nThe original AeroTizen launcher is also installed. Remove it so they don't fight over Home:\n"
+            f"  lgtizen --tv {host} debloat --remove DclHome001"
+        )
 
 
 def cmd_key(args):
@@ -254,6 +265,9 @@ def main():
     p.set_defaults(fn=cmd_debloat)
     p = sub.add_parser("certs")
     p.add_argument("--force", action="store_true")
+    p.add_argument(
+        "--fixed-state", action="store_true", help="send Tizen Studio's fixed sign-in state (fallback only)"
+    )
     p.set_defaults(fn=cmd_certs)
     p = sub.add_parser("install")
     p.add_argument("src", help="app folder (with config.xml) or .wgt file")
@@ -266,6 +280,8 @@ def main():
     p.add_argument("appid")
     p.set_defaults(fn=cmd_launch)
     args = parser.parse_args()
+    if remote.migrate_legacy_config():
+        print(f"Copied your AeroTizen certificates and remote tokens to {remote.CONFIG_DIR}")
     args.fn(args)
 
 

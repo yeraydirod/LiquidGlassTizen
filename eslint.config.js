@@ -30,6 +30,10 @@ module.exports = [
     }
   },
   {
+    files: ['tests/**/*.js'],
+    languageOptions: { ecmaVersion: 2022, sourceType: 'commonjs', globals: { ...globals.node } }
+  },
+  {
     files: ['launcher/service/**/*.js'],
     languageOptions: {
       ecmaVersion: 2018,

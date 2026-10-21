@@ -52,7 +52,7 @@ window.Weather = (function () {
       if (!geo || geo.latitude === undefined) { return; }
       var pref = unitOf();
       var f = pref === 'F' || (pref === 'auto' && (geo.country_code === 'US' || geo.country_code === 'LR' || geo.country_code === 'MM'));
-      getJSON('https://api.open-meteo.com/v1/forecast?latitude=' + geo.latitude + '&longitude=' + geo.longitude +
+      getJSON('https://api.open-meteo.com/v1/forecast?latitude=' + encodeURIComponent(geo.latitude) + '&longitude=' + encodeURIComponent(geo.longitude) +
               '&current=temperature_2m,weather_code' + (f ? '&temperature_unit=fahrenheit' : ''), function (m) {
         if (!m || !m.current) { return; }
         var w = { temp: m.current.temperature_2m, code: m.current.weather_code, city: geo.city, unit: pref, at: Date.now() };

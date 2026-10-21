@@ -24,7 +24,9 @@ from cryptography.x509.oid import NameOID
 
 SIGNIN_GATE = "https://account.samsung.com/accounts/be1dce529476c1a6d407c4c7578c31bd/signInGate"
 CLIENT_ID = "v285zxnl3h"
-STATE = "accountcheckdogeneratedstatetext"
+# The fixed value Tizen Studio sends. Kept only as a fallback (`certs --fixed-state`) in case
+# Samsung ever refuses a random one; by default every sign-in gets its own unguessable state.
+LEGACY_STATE = "accountcheckdogeneratedstatetext"
 CALLBACK_PORT = 4794
 CALLBACK_PATH = "/signin/callback"
 AUTHOR_URL = "https://svdca.samsungqbe.com/apis/v3/authors"
@@ -33,9 +35,16 @@ DIST_V3_URL = "https://svdca.samsungqbe.com/apis/v3/distributors"
 CA_DIR = os.path.join(os.path.dirname(__file__), "ca")
 
 
-def samsung_login(timeout=300):
-    """Open Samsung's sign-in page and wait for the browser to post the token back."""
+def samsung_login(timeout=300, fixed_state=False):
+    """Open Samsung's sign-in page and wait for the browser to post the token back.
+
+    The callback only accepts the `state` generated here, so another page in the browser
+    can't slip its own Samsung token into the local callback while we wait.
+    """
     result = {}
+    state = (
+        LEGACY_STATE if fixed_state else secrets.token_hex(16)
+    )  # same shape as the legacy value: 32 lowercase characters
 
     class Handler(http.server.BaseHTTPRequestHandler):
         def do_POST(self):
@@ -44,7 +53,9 @@ def samsung_login(timeout=300):
                 return
             body = self.rfile.read(int(self.headers.get("Content-Length", 0))).decode()
             form = urllib.parse.parse_qs(body)
-            ok = form.get("state", [""])[0] == STATE and "code" in form
+            ok = (
+                secrets.compare_digest(form.get("state", [""])[0].encode(), state.encode()) and "code" in form
+            )
             if ok:
                 result.update(json.loads(form["code"][0]))
             self.send_response(200 if ok else 400)
@@ -65,7 +76,7 @@ def samsung_login(timeout=300):
     redirect = f"http://localhost:{CALLBACK_PORT}{CALLBACK_PATH}"
     url = (
         f"{SIGNIN_GATE}?locale=&clientId={CLIENT_ID}&redirect_uri={urllib.parse.quote(redirect, safe='')}"
-        f"&state={STATE}&tokenType=TOKEN"
+        f"&state={state}&tokenType=TOKEN"
     )
     server.timeout = timeout
     print("Opening Samsung sign-in in your browser...\n  " + url)
@@ -121,11 +132,20 @@ def _load_cert(data):
         return x509.load_der_x509_certificate(data)
 
 
-def create_profile(duid, out_dir, auth=None):
+def _write_private(path, data):
+    """Write a file only the current user can read (keys, passwords)."""
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "wb") as f:
+        f.write(data)
+    os.chmod(path, 0o600)
+
+
+def create_profile(duid, out_dir, auth=None, fixed_state=False):
     """Sign in (unless `auth` is given) and write author.p12, distributor.p12, password.txt."""
-    auth = auth or samsung_login()
+    auth = auth or samsung_login(fixed_state=fixed_state)
     token, user_id, email = auth["access_token"], auth["userId"], auth.get("inputEmailID") or ""
-    os.makedirs(out_dir, exist_ok=True)
+    os.makedirs(out_dir, mode=0o700, exist_ok=True)
+    os.chmod(out_dir, 0o700)
     password = secrets.token_urlsafe(18)
     key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
 
@@ -154,11 +174,8 @@ def create_profile(duid, out_dir, auth=None):
 
     enc = serialization.BestAvailableEncryption(password.encode())
     for name, cert, ca in (("author", author, author_ca), ("distributor", distributor, dist_ca)):
-        with open(os.path.join(out_dir, f"{name}.p12"), "wb") as f:
-            f.write(pkcs12.serialize_key_and_certificates(name.encode(), key, cert, [ca], enc))
-    with open(os.path.join(out_dir, "password.txt"), "w") as f:
-        f.write(password)
-    with open(os.path.join(out_dir, "device-profile.xml"), "wb") as f:
-        f.write(profile_xml)
-    os.chmod(out_dir, 0o700)
+        p12 = pkcs12.serialize_key_and_certificates(name.encode(), key, cert, [ca], enc)
+        _write_private(os.path.join(out_dir, f"{name}.p12"), p12)
+    _write_private(os.path.join(out_dir, "password.txt"), password.encode())
+    _write_private(os.path.join(out_dir, "device-profile.xml"), profile_xml)
     return out_dir
