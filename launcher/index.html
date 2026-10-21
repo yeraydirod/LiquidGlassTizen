@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>LiquidGlassTizen</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="bg" class="bg"></div>
+  <!-- Layout inspired by LTvLauncher (github.com/leanbitlab-org/LtvLauncher); no code shared. -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div id="gear" class="icon-btn" data-row="0" aria-label="Settings">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1L11 21h4l.4-2.9a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5A3.5 3.5 0 1 1 13 8.5a3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
+      </div>
+      <svg id="network" class="status-icon" viewBox="0 0 24 24" aria-label="Network"></svg>
+    </div>
+    <div class="topbar-right">
+      <span id="weather" class="weather" hidden></span>
+      <span id="date" class="date"></span>
+      <span id="time" class="time"></span>
+    </div>
+  </header>
+
+  <main id="rows">
+    <div id="grid" class="grid3"></div>
+    <section class="row-wrap inputs-wrap">
+      <h2>Inputs</h2>
+      <div id="inputs" class="row small"></div>
+    </section>
+  </main>
+
+  <div id="editor" class="sheet" hidden>
+    <h2>Settings</h2>
+    <h3>Animated backgrounds</h3>
+    <div id="bg-anim" class="swatches"></div>
+    <div id="speed-row" class="speed-row" hidden></div>
+    <h3>Still backgrounds</h3>
+    <div id="bg-still" class="swatches"></div>
+    <h3>Temperature</h3>
+    <div id="units" class="units"></div>
+    <h3>Date &amp; time</h3>
+    <div id="time-formats" class="units"></div>
+    <div id="date-formats" class="units"></div>
+    <h3>Input names</h3>
+    <div id="input-names" class="units"></div>
+    <h3>Show in app menu</h3>
+    <p class="hint">Every app installed on the TV. Press OK to show or hide it on the home screen. On the home screen, hold OK on a tile to move it.</p>
+    <div id="all-apps" class="grid"></div>
+    <div id="escape" class="escape">Use Samsung Home instead</div>
+  </div>
+
+  <div id="fireplace" class="fireplace" hidden>
+    <canvas id="fire-canvas"></canvas>
+    <div class="hearth"></div>
+    <div id="fire-volume" class="fire-volume"></div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="js/config.js"></script>
+  <script src="js/dom.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/clock.js"></script>
+  <script src="js/logos.js"></script>
+  <script src="js/backgrounds.js"></script>
+  <script src="js/weather.js"></script>
+  <script src="js/network.js"></script>
+  <script src="js/fireplace.js"></script>
+  <script src="js/brands.js"></script>
+  <script src="js/homewatch.js"></script>
+  <script src="js/apps.js"></script>
+  <script src="js/inputs.js"></script>
+  <script src="js/home-screen.js"></script>
+  <script src="js/settings-ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
