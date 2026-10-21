@@ -42,6 +42,7 @@
 
   // ---- boot ----------------------------------------------------------------------
   A.settings.load();
+  A.glass.apply();
   A.applyBackground();
   A.clock.start();
   A.network.start();

@@ -51,6 +51,17 @@
     row.appendChild(pill('preview', '▶  Preview', false, startPreview));
   }
 
+  // Liquid Glass look; Automatic also says what it chose on this TV.
+  function renderGlass() {
+    var box = A.$('glass-modes'), names = {};
+    box.textContent = '';
+    A.glass.MODES.forEach(function (m) { names[m[0]] = m[1]; });
+    A.glass.MODES.forEach(function (m) {
+      var label = m[0] === 'auto' && S.glass === 'auto' ? 'Automatic (' + names[A.glass.current()] + ')' : m[1];
+      box.appendChild(pill('glass:' + m[0], label, S.glass === m[0], function () { S.glass = m[0]; changed(A.glass.apply); }));
+    });
+  }
+
   function renderUnits() {
     var units = A.$('units');
     units.textContent = '';
@@ -118,7 +129,7 @@
   }
 
   function render() {
-    renderBackgrounds(); renderUnits(); renderDateTime(); renderInputNames(); renderAppMenu();
+    renderBackgrounds(); renderGlass(); renderUnits(); renderDateTime(); renderInputNames(); renderAppMenu();
     focus();
   }
 
@@ -127,7 +138,7 @@
     function kids(id) { return [].slice.call(A.$(id).children); }
     var r = A.chunk(kids('bg-anim'), 8);
     if (!A.$('speed-row').hidden) { r.push(kids('speed-row')); }
-    return r.concat(A.chunk(kids('bg-still'), 8), [kids('units')], [kids('time-formats')], [kids('date-formats')],
+    return r.concat(A.chunk(kids('bg-still'), 8), [kids('glass-modes')], [kids('units')], [kids('time-formats')], [kids('date-formats')],
       [kids('input-names')], A.chunk(kids('all-apps'), 5), [[A.$('escape')]]);
   }
 

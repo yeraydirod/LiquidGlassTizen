@@ -8,6 +8,8 @@ window.Backgrounds = (function () {
 
   var LIST = [
     // animated
+    { id: 'liquid', name: 'Liquid', anim: 'blobs', base: 'linear-gradient(160deg,#0a1630 0%,#120d2a 55%,#05070f 100%)',
+      blobs: ['rgba(64,140,255,.55)', 'rgba(170,90,255,.45)', 'rgba(40,210,220,.38)', 'rgba(255,120,190,.30)'] },
     { id: 'aurora', name: 'Aurora', anim: 'blobs', base: '#04060b',
       blobs: ['rgba(32,178,150,.55)', 'rgba(110,80,220,.50)', 'rgba(40,120,220,.45)', 'rgba(60,220,140,.30)'] },
     { id: 'lava', name: 'Lava', anim: 'blobs', base: '#0a0405',

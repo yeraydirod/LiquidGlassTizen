@@ -73,9 +73,13 @@
       name.style.color = b.ink;
       tile.appendChild(name);
     }
+    tile.appendChild(sheen());
     tile.onclick = onSelect;
     return tile;
   }
+
+  // The band of light that sweeps across a focused tile in the glass look (css/glass.css).
+  function sheen() { return A.el('div', 'sheen'); }
 
   // A compact card (icon + label), used for inputs.
   function card(label, iconSvg, onSelect) {
@@ -86,5 +90,5 @@
     return tile;
   }
 
-  A.tiles = { ICONS: ICONS, banner: banner, card: card, shortName: shortName };
+  A.tiles = { ICONS: ICONS, banner: banner, card: card, shortName: shortName, sheen: sheen };
 })(window.LiquidGlass);
