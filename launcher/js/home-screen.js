@@ -22,6 +22,7 @@
         tile = A.el('div', 'tile fire');
         tile.innerHTML = A.tiles.ICONS.flame;
         tile.appendChild(A.el('div', 'name', 'Fireplace'));
+        tile.appendChild(A.tiles.sheen());
         tile.onclick = A.apps.playFireplace;
       } else {
         var app = A.apps.byId(id);
