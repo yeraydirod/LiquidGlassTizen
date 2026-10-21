@@ -24,6 +24,7 @@
       return;
     }
     if (A.inputs.watching) {
+      if (A.inputs.watchingTv && (k === KEY.CH_UP || k === KEY.CH_DOWN)) { e.preventDefault(); return A.inputs.channel(k === KEY.CH_UP); }
       if (k === KEY.BACK || k === KEY.ESC || k === KEY.ENTER) { e.preventDefault(); A.inputs.leave(); }
       return;
     }

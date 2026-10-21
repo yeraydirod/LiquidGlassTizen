@@ -10,7 +10,7 @@ LiquidGlass.config = {
   LEGACY_STORAGE_KEYS: ['hearth.home.v1', 'declutter.home.v5'],
 
   // Remote control key codes (Tizen TV).
-  KEY: { LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, ENTER: 13, BACK: 10009, ESC: 27, IME_DONE: 65376, IME_CANCEL: 65385 },
+  KEY: { CH_UP: 427, CH_DOWN: 428, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, ENTER: 13, BACK: 10009, ESC: 27, IME_DONE: 65376, IME_CANCEL: 65385 },
 
   // Apps placed on the home grid the first time, by name prefix, in this order.
   DEFAULT_HOME_APPS: ['youtube', 'netflix', 'prime video', 'stremio', 'spotify'],
@@ -38,6 +38,7 @@ LiquidGlass.config = {
     tempUnit: 'auto',
     dateFormat: 'weekday',
     timeFormat: '12',
-    inputNames: {}
+    inputNames: {},
+    tvChannel: null
   }
 };
