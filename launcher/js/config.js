@@ -10,7 +10,7 @@ LiquidGlass.config = {
   LEGACY_STORAGE_KEYS: ['hearth.home.v1', 'declutter.home.v5'],
 
   // Remote control key codes (Tizen TV).
-  KEY: { LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, ENTER: 13, BACK: 10009, ESC: 27, IME_DONE: 65376, IME_CANCEL: 65385 },
+  KEY: { CH_UP: 427, CH_DOWN: 428, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, ENTER: 13, BACK: 10009, ESC: 27, IME_DONE: 65376, IME_CANCEL: 65385 },
 
   // Apps placed on the home grid the first time, by name prefix, in this order.
   DEFAULT_HOME_APPS: ['youtube', 'netflix', 'prime video', 'stremio', 'spotify'],
@@ -20,10 +20,6 @@ LiquidGlass.config = {
   // everything else is firmware plumbing.
   STORE_PACKAGE: /^[A-Za-z0-9]{10}$/,
   PRELOADED_APPS: { 'org.tizen.netflix-app': '3201907018807', 'org.tizen.primevideo': '3201910019365' },
-  // Firmware apps worth a tile anyway, matched by name: the TV's own antenna/live TV viewer.
-  // Samsung TV Plus is left out on purpose; it is a separate streaming app.
-  TV_APP_NAMES: /terrestre|televisi[oó]n en directo|live tv|^tv$|antena|antenna|tdt/i,
-  NOT_TV_APP_NAMES: /tv\s*plus/i,
   HIDDEN_APPS: /service|emanual|companion|dummy|widget|LqGlass001|DclHome001/i,
   STORE_APP_IDS: ['org.volt.apps', 'com.samsung.tv.store'],
 
@@ -42,6 +38,7 @@ LiquidGlass.config = {
     tempUnit: 'auto',
     dateFormat: 'weekday',
     timeFormat: '12',
-    inputNames: {}
+    inputNames: {},
+    tvChannel: null
   }
 };

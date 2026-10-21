@@ -56,22 +56,71 @@
     } catch (e) { inputs.render(); }
   };
 
+  // ---- Live TV: always the antenna (TDT), never Samsung TV Plus -------------------
+  // The tuner source resumes whatever channel ran last, which is often a TV Plus stream.
+  // So before showing it, make sure an antenna channel is tuned: the last one watched
+  // here, or else the first in the TV's scanned channel list.
+  var antenna = [];
+
+  function key(c) { return c.major + '.' + c.minor; }
+  function isAntenna(c) {
+    for (var i = 0; c && i < antenna.length; i++) { if (key(antenna[i]) === key(c)) { return true; } }
+    return false;
+  }
+
+  function tuneAntenna(next) {
+    var ch = tz.tvchannel, called = false;
+    function done() { if (!called) { called = true; next(); } }
+    if (!ch) { return done(); }
+    try {
+      ch.getChannelList(function (list) {
+        antenna = list || [];
+        var cur = null;
+        try { cur = ch.getCurrentChannel('MAIN'); } catch (e) { /* none yet */ }
+        if (!antenna.length || isAntenna(cur)) { return done(); }
+        var want = isAntenna(A.settings.tvChannel) ? A.settings.tvChannel : antenna[0];
+        ch.tune({ major: want.major, minor: want.minor },
+          { onsuccess: done, onnosignal: done, onprograminforeceived: function () {} }, done, 'MAIN');
+      }, done, 'ALL');
+    } catch (e) { done(); }
+  }
+
+  function rememberChannel() {
+    try {
+      var cur = tz.tvchannel.getCurrentChannel('MAIN');
+      if (isAntenna(cur)) { A.settings.tvChannel = { major: cur.major, minor: cur.minor }; A.settings.save(); }
+    } catch (e) { /* no channel API */ }
+  }
+
+  inputs.channel = function (up) {
+    try { tz.tvchannel[up ? 'tuneUp' : 'tuneDown']({ onsuccess: function () {}, onnosignal: function () {} }, null, 'ALL', 'MAIN'); } catch (e) { /* no channel API */ }
+  };
+
+  function setKeys(on) {
+    try { tz.tvinputdevice[on ? 'registerKeyBatch' : 'unregisterKeyBatch'](['ChannelUp', 'ChannelDown']); } catch (e) { /* not supported */ }
+  }
+
   inputs.show = function (s) {
     if (!tz || !tz.tvwindow) { return A.toast('Would switch to ' + inputs.label(s)); }
     try {
       tz.tvwindow.setSource(s.raw || s, function () {
-        tz.tvwindow.show(function () {
-          inputs.watching = true;
+        (s.type === 'TV' ? tuneAntenna : function (f) { f(); })(function () {
+          tz.tvwindow.show(function () {
+            inputs.watching = true;
+            inputs.watchingTv = s.type === 'TV';
+            if (inputs.watchingTv) { setKeys(true); }
           document.body.classList.add('tv');
           document.documentElement.style.background = 'transparent';
-          window.Backgrounds.hide();
-        }, function () { A.toast('Could not show ' + inputs.label(s)); }, ['0px', '0px', '1920px', '1080px'], 'MAIN');
+            window.Backgrounds.hide();
+          }, function () { A.toast('Could not show ' + inputs.label(s)); }, ['0px', '0px', '1920px', '1080px'], 'MAIN');
+        });
       }, function () { A.toast('Could not switch input'); }, 'MAIN');
     } catch (e) { A.toast('Could not switch input'); }
   };
 
   inputs.leave = function () {
-    inputs.watching = false;
+    if (inputs.watchingTv) { rememberChannel(); setKeys(false); }
+    inputs.watching = inputs.watchingTv = false;
     document.body.classList.remove('tv');
     A.applyBackground();
     try { tz.tvwindow.hide(function () {}, function () {}, 'MAIN'); } catch (e) { /* already hidden */ }

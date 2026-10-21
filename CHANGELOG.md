@@ -1,5 +1,10 @@
 # Cambios
 
+## 0.3.2
+
+- **Live TV es la TDT:** la tarjeta Live TV va la primera, antes de los HDMI, y siempre sintoniza un canal de antena en vez de quedarse en Samsung TV Plus. Recuerda el último canal de TDT que viste y con CH+ / CH− cambias de canal sin salir.
+- `lgtizen install` explica qué hacer si no encuentra la carpeta de la app, en vez de mostrar un error técnico.
+
 ## 0.3.1
 
 - **Certificados en Mac:** las conexiones con Samsung se verifican ahora con los certificados de confianza del propio sistema (Llavero en Mac, almacén de Windows) mediante `truststore`. Así se evita el error `CERTIFICATE_VERIFY_FAILED` del Python de python.org en Mac. Si aun así falla, el programa explica qué hacer en lugar de mostrar un error técnico.
