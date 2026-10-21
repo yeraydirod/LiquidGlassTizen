@@ -44,6 +44,12 @@ def test_app_id_of_rejects_a_crafted_config(tmp_path):
         cli.app_id_of(str(tmp_path))
 
 
+def test_app_id_of_explains_a_missing_folder(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit, match="inside the LiquidGlassTizen folder"):
+        cli.app_id_of("launcher")
+
+
 def test_app_id_of_reads_the_real_launcher():
     here = os.path.dirname(__file__)
     assert cli.app_id_of(os.path.join(here, "..", "launcher")) == "LqGlass001.Home"
