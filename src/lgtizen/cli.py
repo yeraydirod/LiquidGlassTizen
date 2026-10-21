@@ -200,9 +200,7 @@ def app_id_of(src):
     if not m:
         sys.exit("config.xml has no <tizen:application id=...>")
     if not APP_ID.match(m.group(1)):
-        sys.exit(
-            f"config.xml has an unusual app id {m.group(1)!r}; expected PACKAGEID.Name."
-        )
+        sys.exit(f"config.xml has an unusual app id {m.group(1)!r}; expected PACKAGEID.Name.")
     return m.group(1)
 
 
