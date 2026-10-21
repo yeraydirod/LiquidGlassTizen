@@ -1,48 +1,45 @@
-# Contributing
+# Cómo colaborar
 
-Thanks for taking a look. The most useful contribution is trying AeroTizen on your TV and
-opening a "Tested on my TV" issue: every model and firmware year behaves a bit differently, and
-so far only one model has been tested.
+¡Gracias por pasarte! 🙌 Lo que más ayuda es probar LiquidGlassTizen en tu tele y contar en un issue qué modelo tienes, qué año y qué funcionó o qué no. Cada firmware de Samsung tiene sus manías y de momento solo se ha probado un modelo.
 
-## Development setup
+## Prepara tu entorno
 
 ```bash
-git clone https://github.com/helalaou/AeroTizen
-cd AeroTizen
+git clone https://github.com/yeraydirod/LiquidGlassTizen
+cd LiquidGlassTizen
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"     # the aerotizen CLI + pytest + ruff
-npm install                 # ESLint for the launcher (optional)
+pip install -e ".[dev]"     # el comando lgtizen + pytest + ruff
+npm install                 # ESLint para el lanzador
 ```
 
-Checks (CI runs the same):
+Antes de abrir un PR, pasa lo mismo que se comprueba en cada cambio:
 
 ```bash
 ruff check . && ruff format --check .
 pytest
-npm run lint
+npm run lint && npm test
 ```
 
-## Project layout
+## Dónde está cada cosa
 
-| Path | What |
+| Carpeta | Qué hay |
 |---|---|
-| `src/aerotizen/` | Python CLI: sdb client, certificates, package signing, debloat |
-| `launcher/` | The TV app (plain HTML/CSS/JS, no build step) |
-| `launcher/js/config.js` | Every launcher constant in one place |
-| `launcher/service/` | Background service that reclaims the screen from Samsung Home |
-| `tests/` | pytest suite (a fake TV covers the sdb protocol) |
-| `dns/`, `docs/` | Ad/telemetry blocklists and the settings guide |
+| `src/lgtizen/` | La herramienta para el ordenador: cliente sdb, certificados, firma de apps y limpieza |
+| `launcher/` | La app de la tele (HTML, CSS y JS sin compilar) |
+| `launcher/js/config.js` | Todas las constantes del lanzador en un solo sitio |
+| `launcher/service/` | El servicio en segundo plano que recupera la pantalla cuando pulsas Home |
+| `tests/` | Pruebas con pytest (una tele simulada habla el protocolo sdb) y del servicio con Node |
+| `dns/`, `docs/` | Listas de bloqueo y la guía de ajustes |
 
-## Working on the launcher
+## Trabajar en el lanzador
 
-- Preview in a desktop browser: `python3 -m http.server -d launcher`, open
-  http://localhost:8000 at 1920×1080. TV-only features fall back to sample data.
-- On the TV: `aerotizen install launcher`, then `aerotizen-inspect <tv-ip> DclHome001.Home`
-  gives you Chrome DevTools for the running app at http://localhost:9222.
-- Keep it ES5-compatible (older Tizen runtimes) and animate with `transform` only.
+- **En el navegador:** `python3 -m http.server -d launcher` y abre http://localhost:8000 a 1920×1080. Lo que solo existe en la tele se sustituye por datos de ejemplo.
+- **En la tele:** `lgtizen install launcher` y luego `lgtizen-inspect <ip-de-la-tele> LqGlass001.Home`. Tendrás las DevTools de Chrome en http://localhost:9222.
+- **Compatibilidad:** escribe JavaScript ES5, porque las teles antiguas no entienden nada más moderno.
+- **Animaciones:** anima solo con `transform` y `opacity`; las GPU de las teles no dan para más.
 
 ## Pull requests
 
-- One change per PR, with a short description of what you tested and on which TV.
-- New launcher strings and behaviour should work with only the remote (no pointer).
-- Don't commit certificates, `.wgt` packages or anything from `~/.config/aerotizen`.
+- Un cambio por PR, contando qué probaste y en qué tele.
+- Todo tiene que poder usarse solo con el mando (sin puntero).
+- No subas certificados, paquetes `.wgt` ni nada de `~/.config/lgtizen`.

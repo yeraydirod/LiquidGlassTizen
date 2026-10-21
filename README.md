@@ -1,128 +1,125 @@
-# AeroTizen
+# LiquidGlassTizen
 
-A simple home screen for Samsung TVs, and a command-line tool to clean the TV up from your computer.
+**Tu tele Samsung, sin anuncios y con la pantalla de inicio que se merece.**
 
-![AeroTizen home screen](docs/screenshots/home.png)
+![Pantalla de inicio de LiquidGlassTizen](docs/screenshots/home.png)
 
-## Motivation
+Enciendes la tele para ver una película y lo primero que te recibe es un escaparate: "Top Picks for You", Samsung TV Plus arrancando solo y una fila de apps que nunca pediste. Además, la tele va tomando nota de lo que ves.
 
-The default home screen on recent Samsung TVs is mostly ads. The "Top Picks for You" row can't be
-removed, Samsung TV Plus starts playing on its own at boot, and the TV tracks what you watch unless
-you find the privacy settings to turn it off.
+LiquidGlassTizen lo arregla en dos partes:
 
-On Android TV you would install a different launcher and remove the junk over ADB. Tizen allows
-neither: there's no way to replace the home screen, no shell, and the official developer tools are
-a large SDK that doesn't run natively on Apple Silicon.
+- 🖥️ **Un lanzador para la tele** que sustituye la pantalla de inicio de Samsung. Se abre al encender y vuelve cuando pulsas Home.
+- 💻 **Una herramienta para tu ordenador** (`lgtizen`) que prepara la tele, instala el lanzador y te enseña qué apps de fábrica sobran.
 
-AeroTizen works around that. The launcher is a normal TV app that acts as the home screen: it opens
-when the TV turns on and comes back when you press Home. The CLI handles the setup (certificates,
-signing, installing) and shows which preinstalled apps can be removed. Tizen Studio and root
-access aren't needed.
+No necesitas Tizen Studio, ni root, ni pelearte con un SDK de varios gigas.
 
-## Features
+## Qué trae
 
-On the TV:
+**En la tele**
 
-- Your apps in a 3-column grid with their real logos, inputs underneath
-- Opens at power-on and comes back on Home (see [Limits](#limits))
-- Hold OK on a tile to move it around
-- Inputs list every HDMI port and the name of what's plugged in. You can rename them
-- 31 backgrounds, 16 of them animated, with a speed slider and preview (for example [Snowfall](docs/screenshots/theme-snowfall.png) and [Lava](docs/screenshots/theme-lava.png))
-- Time, date, weather and your city in the top bar, in the format you pick
-- Shows whether the TV is on Ethernet or Wi-Fi
-- A Fireplace tile that plays a fireplace video
-- Settings to choose which apps show up, open the Samsung app store, or go back to Samsung's home screen
+- 🧩 Tus apps en una cuadrícula de 3 columnas, con sus logos de verdad.
+- 🔌 Las entradas HDMI debajo, con el nombre de lo que tienes enchufado. Puedes renombrarlas ("Xbox del salón", "La Play de Lucas").
+- ✋ Mantén OK sobre una app para moverla a donde quieras.
+- 🌌 31 fondos, 16 animados (aurora, lava, nieve, lluvia, olas...), con control de velocidad y vista previa.
+- 🌤️ Hora, fecha, tiempo y tu ciudad arriba, en el formato que prefieras.
+- 📶 Un icono que te dice si vas por cable o por Wi-Fi, y con cuánta señal.
+- 🔥 Una chimenea para las noches de invierno (vídeo en YouTube, o una animada si no tienes YouTube).
+- ⚙️ Ajustes para elegir qué apps se ven, abrir la tienda de Samsung o volver al inicio de Samsung si lo echas de menos.
 
-From your computer (`aerotizen`):
+**En tu ordenador**
 
-- Finds the TV on your network
-- Connects to the TV's developer port directly in Python, on macOS, Linux or Windows
-- Creates the Samsung signing certificates for your TV (you sign in to your Samsung account once)
-- Signs and installs any `.wgt` app, including the launcher
-- Lists installed apps, flags the bloat, and removes it if your firmware allows
+- 🔎 Encuentra la tele en tu red.
+- 🔐 Crea los certificados de Samsung para tu tele (inicias sesión una vez en tu cuenta Samsung).
+- 📦 Firma e instala cualquier app `.wgt`, incluido el lanzador.
+- 🧹 Lista las apps instaladas, marca las que sobran y las quita si tu firmware lo permite.
 
-There's also a short [guide to the settings worth turning off](docs/settings.md) (ads, viewing
-data, autorun) and [DNS blocklists](dns/) if you run Pi-hole, AdGuard Home or NextDNS.
-
-| Settings | Moving a tile |
+| Ajustes | Moviendo una app |
 |---|---|
-| ![Settings](docs/screenshots/settings.png) | ![Moving a tile](docs/screenshots/move.png) |
+| ![Ajustes](docs/screenshots/settings.png) | ![Moviendo una app](docs/screenshots/move.png) |
 
-The device names and weather in these screenshots are placeholders.
+Los nombres de dispositivos y el tiempo de las capturas son de ejemplo.
 
-## Tested on
+## Instalación en 4 pasos
 
-| TV | Year | Firmware |
+Necesitas un ordenador en la misma red que la tele, con Python 3.10 o superior.
+
+**1. Instala la herramienta y busca tu tele**
+
+```bash
+pip install git+https://github.com/yeraydirod/LiquidGlassTizen
+lgtizen discover
+```
+
+**2. Activa el modo desarrollador en la tele**
+
+Abre **Apps**, teclea `12345` con el mando, activa *Developer mode* y pon la IP de tu ordenador en *Host PC IP*. Después **desenchufa la tele un minuto** (apagarla con el mando no basta). Comprueba que ha funcionado:
+
+```bash
+lgtizen status   # debe decir developerMode=1
+```
+
+**3. Crea los certificados**
+
+```bash
+lgtizen certs
+```
+
+Se abre la página de inicio de sesión de Samsung en tu navegador. Cuando termines, los certificados quedan guardados en `~/.config/lgtizen`, solo legibles por tu usuario.
+
+**4. Instala el lanzador**
+
+```bash
+git clone https://github.com/yeraydirod/LiquidGlassTizen && cd LiquidGlassTizen
+lgtizen install launcher
+```
+
+Listo. Desde ahora la tele arranca en LiquidGlassTizen y la rueda dentada abre los ajustes. 🎉
+
+Para ver o quitar apps: `lgtizen apps` y `lgtizen debloat`.
+
+> **¿Vienes de AeroTizen?** La primera vez que ejecutes `lgtizen` se copian tus certificados de `~/.config/aerotizen`, así que no tienes que volver a iniciar sesión. Después desinstala el lanzador antiguo para que no se peleen por la pantalla: `lgtizen debloat --remove DclHome001`. Si se te olvida, `lgtizen install` te lo recuerda.
+
+## Más limpieza, sin ordenador
+
+- 📋 [Guía de ajustes de la tele](docs/settings.md): qué apagar para quitar anuncios, el rastreo de lo que ves (ACR) y el arranque automático de TV Plus.
+- 🛡️ [Listas DNS](dns/) para Pi-hole, AdGuard Home o NextDNS. Usa `samsung-ads.txt`.
+
+> ⚠️ **Ojo con `samsung-aggressive.txt`.** Bloquea también el servidor de actualizaciones de Samsung, así que **tu tele dejará de recibir parches de seguridad**. Úsala solo si sabes lo que haces.
+
+## Lo que no puede hacer (todavía)
+
+Samsung no permite nada de esto oficialmente, así que hay trucos con letra pequeña:
+
+- Al pulsar Home, el lanzador vuelve en uno o dos segundos. Funciona desde el inicio de Samsung y dentro de Netflix, pero no dentro de YouTube, Prime Video, Stremio o Spotify, porque esas apps no dicen si están en pantalla. El botón Atrás funciona siempre.
+- En Tizen 6 o superior, las apps de la tienda y las preinstaladas no se pueden quitar desde el ordenador. Bórralas en la tele desde Apps → Ajustes. Las de sistema (TV Plus, Gaming Hub) solo se pueden desactivar.
+- Las apps de la tele se dibujan a 1920×1080 y se escalan, incluso en un panel 4K. Solo el vídeo va a 4K real.
+- Los menús propios de Samsung no se pueden cambiar.
+
+## Probado en
+
+| Tele | Año | Firmware |
 |---|---|---|
 | Samsung 65" Crystal UHD DU7200 (UN65DU7200FXZA) | 2024 | Tizen 9.0 |
 
-Other Samsung TVs from 2020 on should work, but this is the only model tested so far. If you try it
-on yours, please [open a model report](../../issues/new?template=model_report.yml).
+Debería funcionar en teles Samsung de 2020 en adelante. Si lo pruebas en la tuya, [cuéntanos cómo te fue](../../issues/new).
 
-## Setup
+## Seguridad y privacidad
 
-You need a computer on the same network as the TV, with Python 3.10 or newer.
+El código se ha auditado y no envía nada a sus autores. Las únicas conexiones a Internet son los servidores oficiales de certificados de Samsung (al crear los certificados) y el tiempo: [ipapi.co](https://ipapi.co) para saber tu ciudad a partir de tu IP y [Open-Meteo](https://open-meteo.com) para la previsión. En [SECURITY.md](SECURITY.md) está lo que se ha reforzado respecto al proyecto original y lo que queda pendiente.
 
-1. Install the CLI and check that it finds your TV:
+## Proyecto idea
 
-   ```bash
-   pip install git+https://github.com/helalaou/AeroTizen
-   aerotizen discover
-   ```
+LiquidGlassTizen nace de **[AeroTizen](https://github.com/helalaou/AeroTizen)**, de Hamza El Alaoui, publicado con licencia MIT. Él resolvió lo difícil: hablar con la tele sin Tizen Studio, firmar las apps y conseguir que un lanzador se comporte como pantalla de inicio. Gracias. 🙌
 
-2. Turn on Developer Mode on the TV. Open **Apps**, type `12345` on the remote (or with the
-   on-screen number pad), switch Developer mode on, and set Host PC IP to your computer's IP.
-   Then unplug the TV for a minute. Turning it off with the remote isn't enough for the change to
-   apply. `aerotizen status` should now show `developerMode=1`.
+AeroTizen a su vez se apoyó en:
 
-3. Create the certificates. This opens Samsung's sign-in page in your browser:
+- [LTvLauncher](https://github.com/leanbitlab-org/LtvLauncher), inspiración del diseño.
+- [Apps2Samsung](https://github.com/Apps2Samsung/Apps2Samsung) y [tizen-sdb](https://github.com/PatrickSt1991/tizen-sdb), para la conexión de desarrollador, los certificados y la firma.
+- [samsung-tizen-tv-debloat](https://github.com/ardazeytin/samsung-tizen-tv-debloat), para saber qué paquetes se pueden quitar sin romper nada.
+- Logos de [Simple Icons](https://simpleicons.org) (las marcas son de sus dueños).
 
-   ```bash
-   aerotizen certs
-   ```
+Este proyecto no tiene relación con Samsung ni con Apple. Úsalo bajo tu responsabilidad.
 
-4. Install the launcher:
+## Licencia
 
-   ```bash
-   git clone https://github.com/helalaou/AeroTizen && cd AeroTizen
-   aerotizen install launcher
-   ```
-
-That's it. The TV will start on AeroTizen from now on, and the gear icon opens settings.
-
-To look at or remove installed apps, run `aerotizen apps` and `aerotizen debloat`.
-
-## Limits
-
-Samsung doesn't support any of this officially, so some parts are workarounds:
-
-- Pressing Home brings AeroTizen back after a second or two. That works from Samsung's home
-  screen and inside Netflix, but not inside YouTube, Prime Video, Stremio or Spotify. Those apps
-  don't report whether they're on screen, so there's no way to tell. Back still works everywhere.
-- On Tizen 6 and newer, store and preinstalled apps can't be removed over the developer
-  connection. You can delete them on the TV under Apps → Settings. Samsung's system apps (TV Plus,
-  Gaming Hub) can only be disabled.
-- TV apps are drawn at 1920×1080 and upscaled, even on a 4K panel. Only video plays at full 4K.
-- Samsung's own menus and screens can't be changed. The [settings guide](docs/settings.md) and
-  [DNS lists](dns/) cover what you can switch off.
-
-## Contributing
-
-The goal is a home screen that works well on every Samsung TV and gets as far as possible from the
-ads and clutter Tizen ships with. Help is welcome, especially testing on other models: a model
-report saying what works and what doesn't is the most useful contribution. Pull requests for
-fixes, new themes or features are welcome too. See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Credits
-
-- [LTvLauncher](https://github.com/leanbitlab-org/LtvLauncher), which the layout is based on
-- [Apps2Samsung](https://github.com/Apps2Samsung/Apps2Samsung) and [tizen-sdb](https://github.com/PatrickSt1991/tizen-sdb), for how the developer connection, certificates and signing work
-- [samsung-tizen-tv-debloat](https://github.com/ardazeytin/samsung-tizen-tv-debloat), for which packages are safe to remove
-- App logos from [Simple Icons](https://simpleicons.org) (trademarks belong to their owners)
-- Weather from [Open-Meteo](https://open-meteo.com), location from [ipapi](https://ipapi.co)
-
-This project isn't affiliated with Samsung. Use it at your own risk.
-
-## License
-
-[MIT](LICENSE)
+[MIT](LICENSE). Se mantiene el aviso de copyright de AeroTizen junto al de LiquidGlassTizen.
