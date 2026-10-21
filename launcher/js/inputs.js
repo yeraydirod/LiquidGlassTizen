@@ -32,12 +32,12 @@
     A.homeScreen.buildRows();
   };
 
-  // Connected ports first, then empty ones; Live TV last. Refreshes when something is plugged in.
+  // Live TV first, then connected ports, then empty ones. Refreshes when something is plugged in.
   inputs.load = function () {
     if (!tz || !tz.systeminfo) {  // desktop browser preview
       inputs.sources = [
-        { type: 'HDMI', number: 1, editName: 'Xbox', connected: true }, { type: 'HDMI', number: 2, connected: false },
-        { type: 'HDMI', number: 3, editName: 'PC', connected: false }, { type: 'TV', number: 1, connected: true }
+        { type: 'TV', number: 1, connected: true }, { type: 'HDMI', number: 1, editName: 'Xbox', connected: true },
+        { type: 'HDMI', number: 2, connected: false }, { type: 'HDMI', number: 3, editName: 'PC', connected: false }
       ];
       return inputs.render();
     }
@@ -49,7 +49,7 @@
           });
         }
         inputs.sources = tag(info.connected, true).concat(tag(info.disconnected, false)).sort(function (a, b) {
-          return (a.type === 'TV') - (b.type === 'TV') || (b.connected - a.connected) || a.number - b.number;
+          return (b.type === 'TV') - (a.type === 'TV') || (b.connected - a.connected) || a.number - b.number;
         });
         inputs.render();
       }, inputs.render);

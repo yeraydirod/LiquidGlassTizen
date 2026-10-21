@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.3.1
+
+- **Certificados en Mac:** las conexiones con Samsung se verifican ahora con los certificados de confianza del propio sistema (Llavero en Mac, almacén de Windows) mediante `truststore`. Así se evita el error `CERTIFICATE_VERIFY_FAILED` del Python de python.org en Mac. Si aun así falla, el programa explica qué hacer en lugar de mostrar un error técnico.
+
 ## 0.3.0: Liquid Glass
 
 - **Nuevo aspecto Liquid Glass** inspirado en Apple TV: barra superior en dos cápsulas de cristal, iconos con esquinas redondeadas, borde de luz y brillo al enfocarlos, foco que eleva la app con una sombra profunda, entradas HDMI en tarjetas de cristal, ajustes en un gran panel esmerilado y opciones en píldoras.

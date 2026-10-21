@@ -10,6 +10,7 @@ import http.server
 import json
 import os
 import secrets
+import ssl
 import threading
 import urllib.parse
 import urllib.request
@@ -105,15 +106,54 @@ def _multipart(fields, file_field, filename, data):
     return b"".join(parts), f"multipart/form-data; boundary={boundary}"
 
 
+def tls_context():
+    """Verify Samsung's servers against the operating system's own trust store.
+
+    Python from python.org on macOS ships without any root certificates until its
+    "Install Certificates" script is run, and antivirus or company networks often add
+    their own root to the system only. Asking the OS (Keychain on macOS, the Windows
+    certificate store) avoids both. Falls back to certifi's bundle, then Python's default.
+    """
+    try:
+        import truststore
+
+        return truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    except ImportError:
+        pass
+    try:
+        import certifi
+
+        return ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        return ssl.create_default_context()
+
+
+CERT_HELP = """Can't verify the secure connection to Samsung's certificate server ({reason}).
+
+Your computer doesn't trust the certificate it received. The usual fixes:
+  - Mac with Python from python.org: open Finder > Applications > Python 3.x and
+    double-click "Install Certificates.command", then run this command again.
+  - Antivirus with "HTTPS scanning" / "web shield", or a company network or VPN:
+    turn that scanning off for a moment (or use another network) and try again.
+  - Check that the date and time on your computer are correct.
+Nothing was sent to Samsung; your sign-in is still safe. Just run the command again."""
+
+
 def _post(url, fields, filename, csr):
     body, ctype = _multipart(fields, "csr", filename, csr)
     req = urllib.request.Request(url, data=body, headers={"Content-Type": ctype})
     try:
-        with urllib.request.urlopen(req, timeout=60) as r:
+        with urllib.request.urlopen(req, timeout=60, context=tls_context()) as r:
             return r.read()
     except urllib.error.HTTPError as e:
         detail = e.read().decode(errors="replace")[:300]
         raise SystemExit(f"Samsung certificate server refused {url}: {e.code} {detail}") from e
+    except urllib.error.URLError as e:
+        if isinstance(e.reason, ssl.SSLCertVerificationError):
+            raise SystemExit(CERT_HELP.format(reason=e.reason.verify_message or e.reason)) from e
+        raise SystemExit(
+            f"Can't reach Samsung's certificate server ({e.reason}). Check your Internet connection."
+        ) from e
 
 
 def _csr(key, subject, sans=None):

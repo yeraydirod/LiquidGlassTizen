@@ -190,6 +190,12 @@ def app_id_of(src):
     import re
     import zipfile
 
+    if not os.path.exists(src):
+        sys.exit(
+            f"Can't find {src!r} in {os.getcwd()}.\n"
+            "Open the terminal inside the LiquidGlassTizen folder (the one that has 'launcher' in it)"
+            " and run the command again."
+        )
     if os.path.isdir(src):
         with open(os.path.join(src, "config.xml"), encoding="utf-8") as f:
             xml = f.read()

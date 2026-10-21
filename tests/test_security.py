@@ -44,6 +44,12 @@ def test_app_id_of_rejects_a_crafted_config(tmp_path):
         cli.app_id_of(str(tmp_path))
 
 
+def test_app_id_of_explains_a_missing_folder(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit, match="inside the LiquidGlassTizen folder"):
+        cli.app_id_of("launcher")
+
+
 def test_app_id_of_reads_the_real_launcher():
     here = os.path.dirname(__file__)
     assert cli.app_id_of(os.path.join(here, "..", "launcher")) == "LqGlass001.Home"
@@ -193,3 +199,25 @@ def test_remote_pins_the_tv_and_refuses_an_impostor(tmp_path, monkeypatch):
     with pytest.raises(remote.CertificateChanged):
         remote.Remote("127.0.0.1", timeout=5, port=impostor.port).connect()
     assert impostor.requests == []  # the token was never sent
+
+
+# -- Samsung certificate server: TLS stays verified, failures explain themselves ---
+
+
+def test_samsung_requests_verify_tls():
+    ctx = certs.tls_context()
+    assert ctx.verify_mode == ssl.CERT_REQUIRED
+    assert ctx.check_hostname
+
+
+def test_untrusted_certificate_gives_plain_advice(monkeypatch):
+    err = ssl.SSLCertVerificationError(1, "certificate verify failed")
+    err.verify_message = "self-signed certificate in certificate chain"
+
+    def refuse(*a, **k):
+        raise urllib.error.URLError(err)
+
+    monkeypatch.setattr(certs.urllib.request, "urlopen", refuse)
+    with pytest.raises(SystemExit, match=r"Install Certificates\.command") as exc:
+        certs._post("https://svdca.samsungqbe.com/apis/v3/authors", {}, "a.csr", b"csr")
+    assert "self-signed certificate in certificate chain" in str(exc.value)

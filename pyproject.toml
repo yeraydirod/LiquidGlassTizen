@@ -11,7 +11,7 @@ license = "MIT"
 license-files = ["LICENSE"]
 authors = [{ name = "Yeray Díaz Rguez" }, { name = "Hamza El Alaoui (AeroTizen)" }]
 requires-python = ">=3.10"
-dependencies = ["websocket-client>=1.6", "cryptography>=41"]
+dependencies = ["websocket-client>=1.6", "cryptography>=41", "truststore>=0.9", "certifi"]
 keywords = ["samsung", "tizen", "smart-tv", "launcher", "debloat", "sdb"]
 classifiers = [
   "Environment :: Console",
